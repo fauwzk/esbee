@@ -1,15 +1,7 @@
-#include <server.ino>
-#include <data.ino>
+#include <server.cpp>
+#include <data.cpp>
 
 #define led_pin 12
-
-#define ONE_WIRE_BUS 14
-
-time_t epochTime;
-struct tm *ptm;
-int oldDay, oldHour, oldMinutes, currDay;
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
 
 void appendFile(String path, String ajout)
 {

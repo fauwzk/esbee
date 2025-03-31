@@ -6,16 +6,15 @@
 #include "LittleFS.h"
 
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org");
+ESP8266WiFiMulti wifiMulti;  // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
+ESP8266WebServer server(80); // Create a webserver object that listens for HTTP request on port 8
 
 void handleRoot();
 void removeallfiles();
+void removeAllFiles();
 void listAllFiles();
 bool removeFile(String path);
-void removeAllFiles();
 
-ESP8266WiFiMulti wifiMulti;  // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
-ESP8266WebServer server(80); // Create a webserver object that listens for HTTP request on port 8
 
 void handleRoot()
 {

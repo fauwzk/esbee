@@ -3,7 +3,7 @@
 #include <DallasTemperature.h>
 #include <ArduinoJson.h>
 #include <NTPClient.h>
-#include <server.ino>
+#include <server.cpp>
 
 #define ONE_WIRE_BUS 14
 
@@ -12,8 +12,6 @@ struct tm *ptm;
 int oldDay, oldHour, oldMinutes, currDay;
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
-
-WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 int getDay()
