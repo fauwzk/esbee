@@ -1,0 +1,72 @@
+// Include the WebServer library
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <ArduinoJson.h>
+#include <NTPClient.h>
+#include <server.ino>
+
+#define ONE_WIRE_BUS 14
+
+time_t epochTime;
+struct tm *ptm;
+int oldDay, oldHour, oldMinutes, currDay;
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org");
+
+int getDay()
+{
+    return ptm->tm_mday;
+}
+
+int getHour()
+{
+    return ptm->tm_hour;
+}
+
+int getMinutes()
+{
+    return ptm->tm_min;
+}
+
+float getTemp()
+{
+    sensors.requestTemperatures();
+    delay(500);
+    float tempC = sensors.getTempCByIndex(0);
+    Serial.print("Temperature: ");
+    Serial.print(tempC);
+    Serial.println("°C");
+    return tempC;
+}
+
+String getDate()
+{
+    int monthDay = getDay();
+    int currentMonth = ptm->tm_mon + 1;
+    int currentYear = ptm->tm_year + 1900;
+
+    return String(String(monthDay) + "-" + String(currentMonth) + "-" + String(currentYear));
+}
+
+void currTemp()
+{
+
+    String formattedTime = timeClient.getFormattedTime();
+    Serial.print("Formatted Time: ");
+    Serial.println(formattedTime);
+
+    JsonDocument JSONData;
+    // Use the object just like a javascript object or a python dictionary
+    JSONData["Date"] = getDate();
+    JSONData["Heure"] = formattedTime;
+    JSONData["Temperature"] = String(getTemp());
+    // You can add more fields
+    char data[300];
+    // Converts the JSON object to String and stores it in data variable
+    serializeJson(JSONData, data);
+    // Set status code as 200, content type as application/json and send the data
+    server.send(200, "application/json", data);
+}

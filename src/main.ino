@@ -1,27 +1,5 @@
-
-
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-#include <ESP8266WiFiMulti.h>
-#include <ESP8266mDNS.h>
-#include <ESP8266WebServer.h> // Include the WebServer library
-#include <OneWire.h>
-#include <DallasTemperature.h>
-#include "LittleFS.h"
-#include <ArduinoJson.h>
-#include <NTPClient.h>
-
-ESP8266WiFiMulti wifiMulti;  // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
-ESP8266WebServer server(80); // Create a webserver object that listens for HTTP request on port 80
-
-void handleRoot(); // function prototypes for HTTP handlers
-void handleNotFound();
-void removeallfiles();
-void currTemp();
-void listAllFiles();
-void readCurrFile();
-void makeAveragefromfile();
-void removeAllFiles();
+#include <server.ino>
+#include <data.ino>
 
 #define led_pin 12
 
@@ -32,56 +10,6 @@ struct tm *ptm;
 int oldDay, oldHour, oldMinutes, currDay;
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
-
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org");
-
-float getTemp()
-{
-  sensors.requestTemperatures();
-  delay(500);
-  float tempC = sensors.getTempCByIndex(0);
-  Serial.print("Temperature: ");
-  Serial.print(tempC);
-  Serial.println("°C");
-  return tempC;
-}
-
-void handleRoot()
-{
-  server.send(200, "text/plain", "Hello world!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
-}
-
-void removeallfiles()
-{
-  removeAllFiles();
-  server.send(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
-}
-
-void currTemp()
-{
-
-  String formattedTime = timeClient.getFormattedTime();
-  Serial.print("Formatted Time: ");
-  Serial.println(formattedTime);
-
-  JsonDocument JSONData;
-  // Use the object just like a javascript object or a python dictionary
-  JSONData["Date"] = getDate();
-  JSONData["Heure"] = formattedTime;
-  JSONData["Temperature"] = String(getTemp());
-  // You can add more fields
-  char data[300];
-  // Converts the JSON object to String and stores it in data variable
-  serializeJson(JSONData, data);
-  // Set status code as 200, content type as application/json and send the data
-  server.send(200, "application/json", data);
-}
-
-void handleNotFound()
-{
-  server.send(404, "text/plain", "404: Not found"); // Send HTTP status 404 (Not Found) when there's no handler for the URI in the request
-}
 
 void appendFile(String path, String ajout)
 {
@@ -101,30 +29,6 @@ void appendFile(String path, String ajout)
   delay(5000);
   file.flush();
   file.close();
-}
-
-int getDay()
-{
-  return ptm->tm_mday;
-}
-
-int getHour()
-{
-  return ptm->tm_hour;
-}
-
-int getMinutes()
-{
-  return ptm->tm_min;
-}
-
-String getDate()
-{
-  int monthDay = getDay();
-  int currentMonth = ptm->tm_mon + 1;
-  int currentYear = ptm->tm_year + 1900;
-
-  return String(String(monthDay) + "-" + String(currentMonth) + "-" + String(currentYear));
 }
 
 void createFile(String date)
@@ -182,44 +86,6 @@ void makeAveragefromfile()
   createFile(getDate());
 }
 
-void listAllFiles()
-{
-  String allFiles = "";
-  Dir dir = LittleFS.openDir("/"); // Open directory
-  while (dir.next())
-  { // List the file system contents
-    Serial.println("Files: ");
-    Serial.println(dir.fileName());
-    allFiles += dir.fileName() + "\n";
-  }
-  server.send(200, "text/plain", allFiles); // Send HTTP status 200 (Ok) and send some text to the browser/client
-}
-
-bool removeFile(String path)
-{
-  if (LittleFS.exists(path))
-  {                               // Check if file exists
-    return LittleFS.remove(path); // Delete file
-  }
-  else
-  {
-    Serial.println("File not found.");
-    return false;
-  }
-}
-
-void removeAllFiles()
-{
-  Dir dir = LittleFS.openDir("/"); // Open directory
-  while (dir.next())
-  { // List the file system contents
-    Serial.print("Deleting ");
-    Serial.println(dir.fileName());
-    LittleFS.remove(dir.fileName());                      // Remove each file
-    server.send(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
-  }
-}
-
 void setup(void)
 {
   Serial.begin(115200); // Start the Serial communication to send messages to the computer
@@ -258,7 +124,7 @@ void setup(void)
   server.on("/listallfiles", listAllFiles);
   server.on("/readcurrfile", readCurrFile);
   server.on("/avg", makeAveragefromfile);
-  server.onNotFound(handleNotFound); // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
+  // server.onNotFound(handleNotFound); // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
 
   server.begin(); // Actually start the server
   Serial.println("HTTP server started");
