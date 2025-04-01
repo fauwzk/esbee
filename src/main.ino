@@ -1,83 +1,14 @@
-#include <server.cpp>
-#include <data.cpp>
+//#include "data.cpp"
+#include "server.cpp"
+#include "files.cpp"
 
 #define led_pin 12
 
-void appendFile(String path, String ajout)
-{
-  File file = LittleFS.open(path, "a");
-  if (!file)
-  {
-    Serial.println("Erreur d'ouverture du fichier");
-    return;
-  }
+/*
 
-  // Ajout de nouvelles données
-  file.println(ajout);
+SETUP
 
-  // Fermeture du fichier
-  file.close();
-  Serial.println("Ajout terminé");
-  delay(5000);
-  file.flush();
-  file.close();
-}
-
-void createFile(String date)
-{
-  String fileName = "/" + date + ".txt";
-  Serial.println("Creating file: " + fileName);
-  if (!LittleFS.exists(fileName))
-  {
-    File file = LittleFS.open(fileName, "w");
-    if (!file)
-    {
-      Serial.println("Error opening file for writing");
-    }
-    else
-    {
-      Serial.println("File opened for writing");
-      file.close();
-      Serial.println("File closed");
-    }
-  }
-}
-
-// lecture d'un fichier
-void readCurrFile()
-{
-  String fileContent = "";
-  String path = "/" + getDate() + ".txt";
-  Serial.println("Lecture du fichier: " + path);
-
-  File file = LittleFS.open(path, "r");
-  String s = file.readString();
-  file.close();
-  server.send(200, "text/html", s);
-}
-
-void makeAveragefromfile()
-{
-  String path = "/" + getDate() + ".txt";
-  File file = LittleFS.open(path, "r");
-  String line;
-  float sum = 0;
-  int count = 0;
-  while (file.available())
-  {
-    line = file.readStringUntil('\n');
-    sum += line.toFloat();
-    Serial.println("Line: " + line) + " Sum: " + String(sum);
-    count++;
-  }
-  file.close();
-  float average = sum / count;
-  Serial.println("Average: " + String(average));
-  server.send(200, "text/plain", "Average: " + String(average));
-  removeFile(path);
-  createFile(getDate());
-}
-
+*/
 void setup(void)
 {
   Serial.begin(115200); // Start the Serial communication to send messages to the computer
@@ -151,6 +82,12 @@ void setup(void)
 }
 
 int elapsedMinutes = 0;
+
+/*
+
+LOOP
+
+*/
 void loop(void)
 {
   server.handleClient();

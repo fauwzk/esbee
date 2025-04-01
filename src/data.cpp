@@ -3,7 +3,11 @@
 #include <DallasTemperature.h>
 #include <ArduinoJson.h>
 #include <NTPClient.h>
-#include <server.cpp>
+#include <WiFiClient.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
+#include <ESP8266mDNS.h>
+#include <ESP8266WebServer.h>
 
 #define ONE_WIRE_BUS 14
 
@@ -12,6 +16,8 @@ struct tm *ptm;
 int oldDay, oldHour, oldMinutes, currDay;
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
+
+WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 int getDay()
@@ -36,7 +42,7 @@ float getTemp()
     float tempC = sensors.getTempCByIndex(0);
     Serial.print("Temperature: ");
     Serial.print(tempC);
-    Serial.println("°C");
+    Serial.print("°C\n");
     return tempC;
 }
 
@@ -66,5 +72,5 @@ void currTemp()
     // Converts the JSON object to String and stores it in data variable
     serializeJson(JSONData, data);
     // Set status code as 200, content type as application/json and send the data
-    server.send(200, "application/json", data);
+    // server.send(200, "application/json", data);
 }
