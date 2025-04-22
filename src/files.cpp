@@ -8,14 +8,14 @@ void Files::setPath(String p)
     path = p;
 }
 
-void Files::appendFile(String fichier, String ajout)
+int Files::appendFile(String fichier, String ajout)
 {
     path = Files::todayFileName();
     File file = LittleFS.open(path, "a");
     if (!file)
     {
         Serial.println("Erreur d'ouverture du fichier");
-        return;
+        return 1;
     }
     // Ajout de nouvelles données
     file.println(ajout);
@@ -26,6 +26,7 @@ void Files::appendFile(String fichier, String ajout)
     delay(5000);
     file.flush();
     file.close();
+    return 0;
 }
 
 void Files::createFile(String date)

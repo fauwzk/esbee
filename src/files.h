@@ -5,7 +5,7 @@ class Files
 {
 public:
     // Member functions
-    void appendFile(String fichier, String ajout);
+    int appendFile(String fichier, String ajout);
     void createFile(String date);
     void readCurrFile();
     void makeAveragefromfile();

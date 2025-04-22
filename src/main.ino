@@ -70,7 +70,14 @@ void loop(void)
   {
     String filename = fichiers.todayFileName();
     Serial.println("Appending to file: " + filename);
-    fichiers.appendFile(filename, String(donnees.getTemp()));
+    if (fichiers.appendFile(filename, String(donnees.getTemp())) != 0)
+    {
+      Serial.println("Error appending to file");
+    }
+    else
+    {
+      Serial.println("Append completed");
+    }
     Serial.println("Minutes changed, file " + filename + " updated");
     donnees.update_oldMinutes();
     elapsedMinutes++;
