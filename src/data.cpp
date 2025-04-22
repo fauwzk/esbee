@@ -19,10 +19,14 @@ int oldDay, oldHour, oldMinutes, currDay;
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
-sensors.begin();
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
+
+void Data::initSensors()
+{
+    sensors.begin();
+}
 
 int Data::getDay()
 {

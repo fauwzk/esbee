@@ -10,6 +10,7 @@ public:
     static float getTemp();
     static String getDate();
     static void currTemp();
+    static void initSensors();
 };
 
 #endif // DATA_H

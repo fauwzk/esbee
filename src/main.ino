@@ -17,7 +17,7 @@ Data data;
 void setup(void)
 {
   Serial.begin(115200); // Start the Serial communication to send messages to the computer
-  delay(10);
+  delay(100);
   Serial.println();
 
   wifiMulti.addAP("iPhone 15 Pro de Axel", "polentes"); // add Wi-Fi networks you want to connect to
@@ -61,6 +61,7 @@ void setup(void)
   digitalWrite(PIN_GROVE_POWER, 1);
   pinMode(led_pin, OUTPUT);
 
+  data.initSensors();
   timeClient.setTimeOffset(3600);
   timeClient.begin();
   timeClient.update();
