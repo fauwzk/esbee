@@ -73,9 +73,9 @@ void setup(void)
   delay(1000);
   epochTime = timeClient.getEpochTime();
   ptm = gmtime((time_t *)&epochTime);
-  oldDay = data.getDay();
-  oldHour = data.getHour();
-  oldMinutes = data.getMinutes();
+  data.update_oldDay();
+  data.update_oldHour();
+  data.update_oldMinutes();
   if (!LittleFS.exists("/" + getDate() + ".txt"))
   {
     files.createFile(getDate());
@@ -98,18 +98,18 @@ void loop(void)
   server.handleClient();
   epochTime = timeClient.getEpochTime();
   ptm = gmtime((time_t *)&epochTime);
-  currDay = data.getDay();
-  if (currDay != oldDay)
+  if (data.getDay() != data.get_oldDay)
   {
     files.createFile(data.getDate());
-    oldDay = currDay;
+    data.update_oldDay();
+    Serial.println("Day changed, file " + data.getDate() + ".txt created");
   }
-  if (data.getMinutes() != oldMinutes)
+  if (data.getMinutes() != data.get_oldMinutes())
   {
     String filename = "/" + data.getDate() + ".txt";
     files.appendFile(filename, String(data.getTemp()));
     Serial.println("Minutes changed, file " + filename + " updated");
-    oldMinutes = data.getMinutes();
+    data.update_oldMinutes();
     elapsedMinutes++;
     if (elapsedMinutes == 24)
     {

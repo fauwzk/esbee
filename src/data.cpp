@@ -82,3 +82,40 @@ void Data::currTemp()
     // Set status code as 200, content type as application/json and send the data
     // server.send(200, "application/json", data);
 }
+
+void Data::set_oldDay(int day)
+{
+    oldDay = day;
+}
+void Data::set_oldHour(int hour)
+{
+    oldHour = hour;
+}
+void Data::set_oldMinutes(int minutes)
+{
+    oldMinutes = minutes;
+}
+int Data::get_oldDay()
+{
+    return oldDay;
+}
+int Data::get_oldHour()
+{
+    return oldHour;
+}
+int Data::get_oldMinutes()
+{
+    return oldMinutes;
+}
+void Data::update_oldDay()
+{
+    oldDay = getDay();
+}
+void Data::update_oldHour()
+{
+    oldHour = getHour();
+}
+void Data::update_oldMinutes()
+{
+    oldMinutes = getMinutes();
+}
