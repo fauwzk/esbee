@@ -18,7 +18,7 @@ void Server::esbeeHandleclient()
 
 void Server::esbeeSendClient(int code, String contentType, String content)
 {
-    serveur.esbeeSendClient(code, contentType, content); // Send HTTP status code and content type to the client
+    server.send(code, contentType, content); // Send HTTP status code and content type to the client
 }
 
 void Server::startServer()
