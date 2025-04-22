@@ -4,9 +4,9 @@
 class Server
 {
 public:
-    static void root();
-    static void client();
-    static void startServer();
+    void root();
+    void esbeeHandleclient();
+    void startServer();
 };
 
 #endif // FILES_H

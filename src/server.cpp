@@ -15,7 +15,7 @@ void root()
     server.send(200, "text/plain", "Hello world!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
-void client()
+void esbeeHandleclient()
 {
     server.handleClient(); // This line handles incoming client requests
 }

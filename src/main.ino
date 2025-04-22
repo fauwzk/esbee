@@ -1,10 +1,10 @@
 // #include "data.cpp"
+#include <Arduino.h>
 #include "server.h"
 #include "files.h"
 #include "data.h"
 
 #define led_pin 12
-
 /*
 
 SETUP
@@ -60,7 +60,7 @@ LOOP
 */
 void loop(void)
 {
-  serveur.client();
+  serveur.esbeeHandleclient();
   donnees.updateTime();
   if (donnees.getDay() != donnees.get_oldDay())
   {
