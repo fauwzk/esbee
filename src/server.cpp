@@ -8,7 +8,7 @@ ESP8266WebServer server(80); // Create a webserver object that listens for HTTP 
 
 void root()
 {
-    server.send(200, "text/plain", "Hello world!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
+    serveur.esbeeSendClient(200, "text/plain", "Hello world!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
 void Server::esbeeHandleclient()
@@ -18,7 +18,7 @@ void Server::esbeeHandleclient()
 
 void Server::esbeeSendClient(int code, String contentType, String content)
 {
-    server.send(code, contentType, content); // Send HTTP status code and content type to the client
+    serveur.esbeeSendClient(code, contentType, content); // Send HTTP status code and content type to the client
 }
 
 void Server::startServer()

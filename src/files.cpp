@@ -57,7 +57,7 @@ void Files::readCurrFile()
     File file = LittleFS.open(path, "r");
     String s = file.readString();
     file.close();
-    // server.send(200, "text/html", s);
+    // serveur.esbeeSendClient(200, "text/html", s);
 }
 
 void Files::makeAveragefromfile()
@@ -77,7 +77,7 @@ void Files::makeAveragefromfile()
     file.close();
     float average = sum / count;
     Serial.println("Average: " + String(average));
-    // server.send(200, "text/plain", "Average: " + String(average));
+    // serveur.esbeeSendClient(200, "text/plain", "Average: " + String(average));
     removeFile(path);
     createFile(donnees.getDate());
 }
@@ -85,7 +85,7 @@ void Files::makeAveragefromfile()
 void Files::removeallfiles()
 {
     removeAllFiles();
-    // server.send(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
+    // serveur.esbeeSendClient(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
 void Files::listAllFiles()
@@ -98,7 +98,7 @@ void Files::listAllFiles()
         Serial.println(dir.fileName());
         allFiles += dir.fileName() + "\n";
     }
-    // server.send(200, "text/plain", allFiles); // Send HTTP status 200 (Ok) and send some text to the browser/client
+    // serveur.esbeeSendClient(200, "text/plain", allFiles); // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
 bool Files::removeFile(String path)
@@ -122,7 +122,7 @@ void Files::removeAllFiles()
         Serial.print("Deleting ");
         Serial.println(dir.fileName());
         LittleFS.remove(dir.fileName()); // Remove each file
-        // server.send(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
+        // serveur.esbeeSendClient(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
     }
 }
 
