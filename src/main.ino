@@ -1,6 +1,7 @@
-//#include "data.cpp"
+// #include "data.cpp"
 #include "server.cpp"
-#include "files.cpp"
+#include "files.h"
+#include "data.h"
 
 #define led_pin 12
 
@@ -9,11 +10,15 @@
 SETUP
 
 */
+
+Files files;
+Data data;
+
 void setup(void)
 {
   Serial.begin(115200); // Start the Serial communication to send messages to the computer
   delay(10);
-  Serial.println('\n');
+  Serial.println();
 
   wifiMulti.addAP("iPhone 15 Pro de Axel", "polentes"); // add Wi-Fi networks you want to connect to
   // wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
@@ -42,11 +47,11 @@ void setup(void)
   }
 
   server.on("/", handleRoot);
-  server.on("/temp", currTemp);
-  server.on("/removeallfiles", removeallfiles);
-  server.on("/listallfiles", listAllFiles);
-  server.on("/readcurrfile", readCurrFile);
-  server.on("/avg", makeAveragefromfile);
+  server.on("/temp", data.currTemp);
+  server.on("/removeallfiles", files.removeallfiles);
+  server.on("/listallfiles", files.listAllFiles);
+  server.on("/readcurrfile", files.readCurrFile);
+  server.on("/avg", files.makeAveragefromfile);
   // server.onNotFound(handleNotFound); // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
 
   server.begin(); // Actually start the server
@@ -55,7 +60,6 @@ void setup(void)
   pinMode(PIN_GROVE_POWER, OUTPUT);
   digitalWrite(PIN_GROVE_POWER, 1);
   pinMode(led_pin, OUTPUT);
-  sensors.begin();
 
   timeClient.setTimeOffset(3600);
   timeClient.begin();
@@ -68,9 +72,9 @@ void setup(void)
   delay(1000);
   epochTime = timeClient.getEpochTime();
   ptm = gmtime((time_t *)&epochTime);
-  oldDay = getDay();
-  oldHour = getHour();
-  oldMinutes = getMinutes();
+  oldDay = data.getDay();
+  oldHour = data.getHour();
+  oldMinutes = data.getMinutes();
   if (!LittleFS.exists("/" + getDate() + ".txt"))
   {
     createFile(getDate());

@@ -9,33 +9,37 @@
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 
+#include "data.h"
+
 #define ONE_WIRE_BUS 14
 
 time_t epochTime;
 struct tm *ptm;
 int oldDay, oldHour, oldMinutes, currDay;
+
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
+sensors.begin();
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
-int getDay()
+int Data::getDay()
 {
     return ptm->tm_mday;
 }
 
-int getHour()
+int Data::getHour()
 {
     return ptm->tm_hour;
 }
 
-int getMinutes()
+int Data::getMinutes()
 {
     return ptm->tm_min;
 }
 
-float getTemp()
+float Data::getTemp()
 {
     sensors.requestTemperatures();
     delay(500);
@@ -46,7 +50,7 @@ float getTemp()
     return tempC;
 }
 
-String getDate()
+String Data::getDate()
 {
     int monthDay = getDay();
     int currentMonth = ptm->tm_mon + 1;
@@ -55,7 +59,7 @@ String getDate()
     return String(String(monthDay) + "-" + String(currentMonth) + "-" + String(currentYear));
 }
 
-void currTemp()
+void Data::currTemp()
 {
 
     String formattedTime = timeClient.getFormattedTime();
