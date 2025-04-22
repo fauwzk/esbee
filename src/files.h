@@ -6,15 +6,16 @@ class Files
 public:
     // Member functions
     int appendFile(String fichier, String ajout);
-    void createFile(String date);
-    void readCurrFile();
-    void makeAveragefromfile();
+    int createFile(String date);
+    int readCurrFile();
+    int makeAveragefromfile();
+    int todayFile();
+    int initFileSystem();
+
     void removeallfiles();
     void listAllFiles();
     bool removeFile(String path);
     void removeAllFiles();
-    int todayFile();
-    int initFileSystem();
     void setPath(String p);
     String todayFileName();
 };

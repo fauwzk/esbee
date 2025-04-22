@@ -41,7 +41,14 @@ void setup(void)
   // if (!LittleFS.exists("/" + data.getDate() + ".txt"))
   if (!fichiers.todayFile())
   {
-    fichiers.createFile(donnees.getDate());
+    if (fichiers.createFile(donnees.getDate()) != 0)
+    {
+      Serial.println("Error creating file");
+    }
+    else
+    {
+      Serial.println("File created successfully");
+    }
   }
   else
   {
@@ -62,7 +69,14 @@ void loop(void)
   donnees.updateTime();
   if (donnees.getDay() != donnees.get_oldDay())
   {
-    fichiers.createFile(donnees.getDate());
+    if (fichiers.createFile(donnees.getDate()) != 0)
+    {
+      Serial.println("Error creating file for new day");
+    }
+    else
+    {
+      Serial.println("File created successfully for new day");
+    }
     donnees.update_oldDay();
     Serial.println("Day changed, file " + donnees.getDate() + ".txt created");
   }
@@ -70,6 +84,7 @@ void loop(void)
   {
     String filename = fichiers.todayFileName();
     Serial.println("Appending to file: " + filename);
+
     if (fichiers.appendFile(filename, String(donnees.getTemp())) != 0)
     {
       Serial.println("Error appending to file");
@@ -78,14 +93,23 @@ void loop(void)
     {
       Serial.println("Append completed");
     }
+
     Serial.println("Minutes changed, file " + filename + " updated");
     donnees.update_oldMinutes();
+
     elapsedMinutes++;
     if (elapsedMinutes == 24)
     {
       elapsedMinutes = 0;
       Serial.println("Création de la moyenne");
-      fichiers.makeAveragefromfile();
+      if (fichiers.makeAveragefromfile() != 0)
+      {
+        Serial.println("Erreur lors de la création de la moyenne");
+      }
+      else
+      {
+        Serial.println("Moyenne créée avec succès");
+      }
     }
   }
   delay(1);

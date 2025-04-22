@@ -21,13 +21,13 @@ int Files::appendFile(String fichier, String ajout)
 
     // Fermeture du fichier
     file.close();
-    delay(5000);
+    delay(1000);
     file.flush();
     file.close();
     return 0;
 }
 
-void Files::createFile(String date)
+int Files::createFile(String date)
 {
     String fileName = "/" + date + ".txt";
     Serial.println("Creating file: " + fileName);
@@ -36,33 +36,39 @@ void Files::createFile(String date)
         File file = LittleFS.open(fileName, "w");
         if (!file)
         {
-            Serial.println("Error opening file for writing");
+            return 1;
         }
         else
         {
-            Serial.println("File opened for writing");
             file.close();
-            Serial.println("File closed");
+            return 0;
         }
     }
 }
 
-void Files::readCurrFile()
+int Files::readCurrFile()
 {
     path = Files::todayFileName();
     String fileContent = "";
-    Serial.println("Lecture du fichier: " + path);
-
     File file = LittleFS.open(path, "r");
+    if (!file)
+    {
+        Serial.println("Failed to open file for reading");
+        return 1;
+    }
     String s = file.readString();
     file.close();
     serveur.esbeeSendClient(200, "text/html", s);
 }
 
-void Files::makeAveragefromfile()
+int Files::makeAveragefromfile()
 {
     path = Files::todayFileName();
     File file = LittleFS.open(path, "r");
+    if (!file)
+    {
+        return 1;
+    }
     String line;
     float sum = 0;
     int count = 0;
@@ -75,7 +81,6 @@ void Files::makeAveragefromfile()
     }
     file.close();
     float average = sum / count;
-    Serial.println("Average: " + String(average));
     serveur.esbeeSendClient(200, "text/plain", "Average: " + String(average));
     removeFile(path);
     createFile(donnees.getDate());
