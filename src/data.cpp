@@ -107,15 +107,11 @@ void Data::currTemp()
     Serial.println(formattedTime);
 
     JsonDocument JSONData;
-    // Use the object just like a javascript object or a python dictionary
     JSONData["Date"] = getDate();
     JSONData["Heure"] = formattedTime;
     JSONData["Temperature"] = String(getTemp());
-    // You can add more fields
     char data[300];
-    // Converts the JSON object to String and stores it in data variable
     serializeJson(JSONData, data);
-    // Set status code as 200, content type as application/json and send the data
     serveur.esbeeSendClient(200, "application/json", data);
 }
 
