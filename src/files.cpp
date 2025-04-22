@@ -14,7 +14,6 @@ int Files::appendFile(String fichier, String ajout)
     File file = LittleFS.open(path, "a");
     if (!file)
     {
-        Serial.println("Erreur d'ouverture du fichier");
         return 1;
     }
     // Ajout de nouvelles données
@@ -22,7 +21,6 @@ int Files::appendFile(String fichier, String ajout)
 
     // Fermeture du fichier
     file.close();
-    Serial.println("Ajout terminé");
     delay(5000);
     file.flush();
     file.close();
