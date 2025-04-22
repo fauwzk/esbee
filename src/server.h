@@ -4,7 +4,6 @@
 class Server
 {
 public:
-    void root();
     void esbeeHandleclient();
     void startServer();
 };

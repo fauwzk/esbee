@@ -1,8 +1,6 @@
 // #include "data.cpp"
 #include <Arduino.h>
-#include "server.h"
-#include "files.h"
-#include "data.h"
+#include "globals.h"
 
 #define led_pin 12
 /*

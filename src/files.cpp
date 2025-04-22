@@ -1,8 +1,6 @@
 #include "LittleFS.h"
-#include "files.h"
-#include "data.h"
+#include "globals.h"
 
-Data donnees;
 String path;
 
 void Files::setPath(String p)
