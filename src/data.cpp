@@ -43,6 +43,43 @@ int Data::getMinutes()
     return ptm->tm_min;
 }
 
+void Data::set_oldDay(int day)
+{
+    oldDay = day;
+}
+void Data::set_oldHour(int hour)
+{
+    oldHour = hour;
+}
+void Data::set_oldMinutes(int minutes)
+{
+    oldMinutes = minutes;
+}
+int Data::get_oldDay()
+{
+    return oldDay;
+}
+int Data::get_oldHour()
+{
+    return oldHour;
+}
+int Data::get_oldMinutes()
+{
+    return oldMinutes;
+}
+void Data::update_oldDay()
+{
+    oldDay = getDay();
+}
+void Data::update_oldHour()
+{
+    oldHour = getHour();
+}
+void Data::update_oldMinutes()
+{
+    oldMinutes = getMinutes();
+}
+
 float Data::getTemp()
 {
     sensors.requestTemperatures();
@@ -83,39 +120,18 @@ void Data::currTemp()
     // server.send(200, "application/json", data);
 }
 
-void Data::set_oldDay(int day)
+void Data::updateTime()
 {
-    oldDay = day;
+    timeClient.update();
+    epochTime = timeClient.getEpochTime();
+    ptm = localtime(&epochTime);
 }
-void Data::set_oldHour(int hour)
+
+void Data::initTime()
 {
-    oldHour = hour;
-}
-void Data::set_oldMinutes(int minutes)
-{
-    oldMinutes = minutes;
-}
-int Data::get_oldDay()
-{
-    return oldDay;
-}
-int Data::get_oldHour()
-{
-    return oldHour;
-}
-int Data::get_oldMinutes()
-{
-    return oldMinutes;
-}
-void Data::update_oldDay()
-{
-    oldDay = getDay();
-}
-void Data::update_oldHour()
-{
-    oldHour = getHour();
-}
-void Data::update_oldMinutes()
-{
-    oldMinutes = getMinutes();
+    timeClient.begin();
+    timeClient.setTimeOffset(3600); // Set timezone offset in seconds (e.g., 3600 for UTC+1)
+    timeClient.update();
+    epochTime = timeClient.getEpochTime();
+    ptm = localtime(&epochTime);
 }

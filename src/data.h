@@ -20,6 +20,8 @@ public:
     static void update_oldDay();
     static void update_oldHour();
     static void update_oldMinutes();
+    static void updateTime();
+    static void initTime();
 };
 
 #endif // DATA_H

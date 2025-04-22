@@ -1,5 +1,5 @@
 // #include "data.cpp"
-#include "server.cpp"
+#include "server.h"
 #include "files.h"
 #include "data.h"
 
@@ -11,8 +11,9 @@ SETUP
 
 */
 
-Files files;
+Files fichiers;
 Data data;
+Server server;
 
 void setup(void)
 {
@@ -20,41 +21,7 @@ void setup(void)
   delay(100);
   Serial.println();
 
-  wifiMulti.addAP("iPhone 15 Pro de Axel", "polentes"); // add Wi-Fi networks you want to connect to
-  // wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
-  // wifiMulti.addAP("ssid_from_AP_3", "your_password_for_AP_3");
-
-  Serial.println("Connecting ...");
-  while (wifiMulti.run() != WL_CONNECTED)
-  { // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
-    Serial.print('.');
-    delay(10);
-  }
-
-  Serial.println('\n');
-  Serial.println("Connected to:");
-  Serial.println(WiFi.SSID()); // Tell us what network we're connected to
-  Serial.println("IP address:");
-  Serial.println(WiFi.localIP()); // Send the IP address of the ESP8266 to the computer
-
-  if (MDNS.begin("esbee"))
-  { // Start the mDNS responder for esp8266.local
-    Serial.println("mDNS responder started");
-  }
-  else
-  {
-    Serial.println("Error setting up MDNS responder!");
-  }
-
-  server.on("/", handleRoot);
-  server.on("/temp", data.currTemp);
-  server.on("/removeallfiles", files.removeallfiles);
-  server.on("/listallfiles", files.listAllFiles);
-  server.on("/readcurrfile", files.readCurrFile);
-  server.on("/avg", files.makeAveragefromfile);
-  // server.onNotFound(handleNotFound); // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
-
-  server.begin(); // Actually start the server
+  server.startServer();
   Serial.println("HTTP server started");
 
   pinMode(PIN_GROVE_POWER, OUTPUT);
@@ -62,23 +29,21 @@ void setup(void)
   pinMode(led_pin, OUTPUT);
 
   data.initSensors();
-  timeClient.setTimeOffset(3600);
-  timeClient.begin();
-  timeClient.update();
-  if (!LittleFS.begin())
+  data.initTime();
+  if (!fichiers.initFileSystem())
   {
     Serial.println("Erreur lors de l'initialisation de LittleFS");
     return;
   }
   delay(1000);
-  epochTime = timeClient.getEpochTime();
-  ptm = gmtime((time_t *)&epochTime);
   data.update_oldDay();
   data.update_oldHour();
   data.update_oldMinutes();
-  if (!LittleFS.exists("/" + getDate() + ".txt"))
+
+  // if (!LittleFS.exists("/" + data.getDate() + ".txt"))
+  if (!fichiers.todayFile())
   {
-    files.createFile(getDate());
+    fichiers.createFile(data.getDate());
   }
   else
   {
@@ -96,18 +61,17 @@ LOOP
 void loop(void)
 {
   server.handleClient();
-  epochTime = timeClient.getEpochTime();
-  ptm = gmtime((time_t *)&epochTime);
-  if (data.getDay() != data.get_oldDay)
+  data.updateTime();
+  if (data.getDay() != data.get_oldDay())
   {
-    files.createFile(data.getDate());
+    fichiers.createFile(data.getDate());
     data.update_oldDay();
     Serial.println("Day changed, file " + data.getDate() + ".txt created");
   }
   if (data.getMinutes() != data.get_oldMinutes())
   {
     String filename = "/" + data.getDate() + ".txt";
-    files.appendFile(filename, String(data.getTemp()));
+    fichiers.appendFile(filename, String(data.getTemp()));
     Serial.println("Minutes changed, file " + filename + " updated");
     data.update_oldMinutes();
     elapsedMinutes++;
@@ -115,7 +79,7 @@ void loop(void)
     {
       elapsedMinutes = 0;
       Serial.println("Création de la moyenne");
-      files.makeAveragefromfile();
+      fichiers.makeAveragefromfile();
     }
   }
   delay(1);

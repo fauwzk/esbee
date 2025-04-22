@@ -4,11 +4,6 @@
 class Files
 {
 public:
-    static String path;
-
-    // Constructor
-    Files(String p);
-
     // Member functions
     static void appendFile(String fichier, String ajout);
     static void createFile(String date);
@@ -18,6 +13,9 @@ public:
     static void listAllFiles();
     static bool removeFile(String path);
     static void removeAllFiles();
+    static int todayFile();
+    static int initFileSystem();
+    static void setPath(String p);
 };
 
 #endif // FILES_H

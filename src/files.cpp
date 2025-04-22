@@ -1,8 +1,11 @@
 #include "LittleFS.h"
 #include "files.h"
-#include "data.cpp"
+#include "data.h"
 
-Files::Files(String p)
+Data data;
+String path;
+
+void Files::setPath(String p)
 {
     path = p;
 }
@@ -75,7 +78,7 @@ void Files::makeAveragefromfile()
     Serial.println("Average: " + String(average));
     // server.send(200, "text/plain", "Average: " + String(average));
     removeFile(path);
-    createFile(Data::getDate());
+    createFile(data.getDate());
 }
 
 void Files::removeallfiles()
@@ -119,5 +122,31 @@ void Files::removeAllFiles()
         Serial.println(dir.fileName());
         LittleFS.remove(dir.fileName()); // Remove each file
         // server.send(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
+    }
+}
+
+int Files::todayFile()
+{
+    String fileName = "/" + Data::getDate() + ".txt";
+    Serial.println("Today file: " + fileName);
+    if (LittleFS.exists(fileName))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+int Files::initFileSystem()
+{
+    if (!LittleFS.begin())
+    {
+        return -1;
+    }
+    else
+    {
+        return 0;
     }
 }
