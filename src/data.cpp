@@ -8,8 +8,7 @@
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
-
-#include "data.h"
+#include "globals.h"
 
 #define ONE_WIRE_BUS 14
 
@@ -117,7 +116,7 @@ void Data::currTemp()
     // Converts the JSON object to String and stores it in data variable
     serializeJson(JSONData, data);
     // Set status code as 200, content type as application/json and send the data
-    // server.send(200, "application/json", data);
+    serveur.esbeeSendClient(200, "application/json", data);
 }
 
 void Data::updateTime()

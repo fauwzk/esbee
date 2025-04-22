@@ -16,6 +16,11 @@ void Server::esbeeHandleclient()
     server.handleClient(); // This line handles incoming client requests
 }
 
+void Server::esbeeSendClient(int code, String contentType, String content)
+{
+    server.send(code, contentType, content); // Send HTTP status code and content type to the client
+}
+
 void Server::startServer()
 {
     wifiMulti.addAP("iPhone 15 Pro de Axel", "polentes"); // add Wi-Fi networks you want to connect to

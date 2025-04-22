@@ -10,6 +10,7 @@ void Files::setPath(String p)
 
 void Files::appendFile(String fichier, String ajout)
 {
+    path = Files::todayFileName();
     File file = LittleFS.open(path, "a");
     if (!file)
     {
@@ -49,6 +50,7 @@ void Files::createFile(String date)
 
 void Files::readCurrFile()
 {
+    path = Files::todayFileName();
     String fileContent = "";
     Serial.println("Lecture du fichier: " + path);
 
@@ -60,6 +62,7 @@ void Files::readCurrFile()
 
 void Files::makeAveragefromfile()
 {
+    path = Files::todayFileName();
     File file = LittleFS.open(path, "r");
     String line;
     float sum = 0;
@@ -123,9 +126,15 @@ void Files::removeAllFiles()
     }
 }
 
-int Files::todayFile()
+String Files::todayFileName()
 {
     String fileName = "/" + donnees.getDate() + ".txt";
+    return fileName;
+}
+
+int Files::todayFile()
+{
+    String fileName = Files::todayFileName();
     Serial.println("Today file: " + fileName);
     if (LittleFS.exists(fileName))
     {

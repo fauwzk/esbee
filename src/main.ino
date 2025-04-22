@@ -28,7 +28,7 @@ void setup(void)
 
   donnees.initSensors();
   donnees.initTime();
-  if (!fichiers.initFileSystem())
+  if (fichiers.initFileSystem() != 0)
   {
     Serial.println("Erreur lors de l'initialisation de LittleFS");
     return;
@@ -49,13 +49,13 @@ void setup(void)
   }
 }
 
-int elapsedMinutes = 0;
-
 /*
 
 LOOP
 
 */
+
+int elapsedMinutes = 0;
 void loop(void)
 {
   serveur.esbeeHandleclient();
@@ -68,7 +68,8 @@ void loop(void)
   }
   if (donnees.getMinutes() != donnees.get_oldMinutes())
   {
-    String filename = "/" + donnees.getDate() + ".txt";
+    String filename = fichiers.todayFileName();
+    Serial.println("Appending to file: " + filename);
     fichiers.appendFile(filename, String(donnees.getTemp()));
     Serial.println("Minutes changed, file " + filename + " updated");
     donnees.update_oldMinutes();

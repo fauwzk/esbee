@@ -16,6 +16,7 @@ public:
     int todayFile();
     int initFileSystem();
     void setPath(String p);
+    String todayFileName();
 };
 
 #endif // FILES_H
