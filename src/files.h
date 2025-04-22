@@ -10,7 +10,7 @@ public:
     Files(String p);
 
     // Member functions
-    static void appendFile(String ajout);
+    static void appendFile(String fichier, String ajout);
     static void createFile(String date);
     static void readCurrFile();
     static void makeAveragefromfile();

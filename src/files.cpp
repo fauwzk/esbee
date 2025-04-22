@@ -7,7 +7,7 @@ Files::Files(String p)
     path = p;
 }
 
-void Files::appendFile(String ajout)
+void Files::appendFile(String fichier, String ajout)
 {
     File file = LittleFS.open(path, "a");
     if (!file)

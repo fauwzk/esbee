@@ -77,7 +77,7 @@ void setup(void)
   oldMinutes = data.getMinutes();
   if (!LittleFS.exists("/" + getDate() + ".txt"))
   {
-    createFile(getDate());
+    files.createFile(getDate());
   }
   else
   {
@@ -97,24 +97,24 @@ void loop(void)
   server.handleClient();
   epochTime = timeClient.getEpochTime();
   ptm = gmtime((time_t *)&epochTime);
-  currDay = getDay();
+  currDay = data.getDay();
   if (currDay != oldDay)
   {
-    createFile(getDate());
+    files.createFile(data.getDate());
     oldDay = currDay;
   }
-  if (getMinutes() != oldMinutes)
+  if (data.getMinutes() != oldMinutes)
   {
-    String filename = "/" + getDate() + ".txt";
-    appendFile(filename, String(getTemp()));
+    String filename = "/" + data.getDate() + ".txt";
+    files.appendFile(filename, String(data.getTemp()));
     Serial.println("Minutes changed, file " + filename + " updated");
-    oldMinutes = getMinutes();
+    oldMinutes = data.getMinutes();
     elapsedMinutes++;
     if (elapsedMinutes == 24)
     {
       elapsedMinutes = 0;
       Serial.println("Création de la moyenne");
-      makeAveragefromfile();
+      files.makeAveragefromfile();
     }
   }
   delay(1);
