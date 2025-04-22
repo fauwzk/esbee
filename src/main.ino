@@ -12,8 +12,8 @@ SETUP
 */
 
 Files fichiers;
-Data data;
-Server server;
+Data donnees;
+Server serveur;
 
 void setup(void)
 {
@@ -21,29 +21,29 @@ void setup(void)
   delay(100);
   Serial.println();
 
-  server.startServer();
+  serveur.startServer();
   Serial.println("HTTP server started");
 
   pinMode(PIN_GROVE_POWER, OUTPUT);
   digitalWrite(PIN_GROVE_POWER, 1);
   pinMode(led_pin, OUTPUT);
 
-  data.initSensors();
-  data.initTime();
+  donnees.initSensors();
+  donnees.initTime();
   if (!fichiers.initFileSystem())
   {
     Serial.println("Erreur lors de l'initialisation de LittleFS");
     return;
   }
   delay(1000);
-  data.update_oldDay();
-  data.update_oldHour();
-  data.update_oldMinutes();
+  donnees.update_oldDay();
+  donnees.update_oldHour();
+  donnees.update_oldMinutes();
 
   // if (!LittleFS.exists("/" + data.getDate() + ".txt"))
   if (!fichiers.todayFile())
   {
-    fichiers.createFile(data.getDate());
+    fichiers.createFile(donnees.getDate());
   }
   else
   {
@@ -60,20 +60,20 @@ LOOP
 */
 void loop(void)
 {
-  server.handleClient();
-  data.updateTime();
-  if (data.getDay() != data.get_oldDay())
+  serveur.client();
+  donnees.updateTime();
+  if (donnees.getDay() != donnees.get_oldDay())
   {
-    fichiers.createFile(data.getDate());
-    data.update_oldDay();
-    Serial.println("Day changed, file " + data.getDate() + ".txt created");
+    fichiers.createFile(donnees.getDate());
+    donnees.update_oldDay();
+    Serial.println("Day changed, file " + donnees.getDate() + ".txt created");
   }
-  if (data.getMinutes() != data.get_oldMinutes())
+  if (donnees.getMinutes() != donnees.get_oldMinutes())
   {
-    String filename = "/" + data.getDate() + ".txt";
-    fichiers.appendFile(filename, String(data.getTemp()));
+    String filename = "/" + donnees.getDate() + ".txt";
+    fichiers.appendFile(filename, String(donnees.getTemp()));
     Serial.println("Minutes changed, file " + filename + " updated");
-    data.update_oldMinutes();
+    donnees.update_oldMinutes();
     elapsedMinutes++;
     if (elapsedMinutes == 24)
     {

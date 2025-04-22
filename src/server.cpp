@@ -8,14 +8,14 @@ ESP8266WiFiMulti wifiMulti;  // Create an instance of the ESP8266WiFiMulti class
 ESP8266WebServer server(80); // Create a webserver object that listens for HTTP request on port 8
 
 Files fichiers; // Create an instance of the Files class, called 'fichiers'
-Data data;
+Data donnees;
 
-void handleRoot()
+void root()
 {
     server.send(200, "text/plain", "Hello world!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
-void handleClient()
+void client()
 {
     server.handleClient(); // This line handles incoming client requests
 }
@@ -47,15 +47,16 @@ void startServer()
     {
         Serial.println("Error setting up MDNS responder!");
     }
-    server.on("/", handleRoot);                            // When a client requests the root URL ("/"), call the handleRoot function
-    server.on("/temp", data.currTemp);                     // When a client requests "/temp", call the currTemp function
-    server.on("/removeallfiles", fichiers.removeallfiles); // When a client requests "/removeallfiles", call the removeallfiles function
-    server.on("/listallfiles", fichiers.listAllFiles);     // When a client requests "/listallfiles", call the listAllFiles function
-    server.on("/readcurrfile", fichiers.readCurrFile);     // When a client requests "/readcurrfile", call the readCurrFile function
-    server.on("/avg", fichiers.makeAveragefromfile);       // When a client requests "/avg", call the makeAveragefromfile function
-    server.begin();                                        // Start the server
-}
-
-void connect()
-{
+    server.on("/", root); // When a client requests the root URL ("/"), call the handleRoot function
+    server.on("/temp", []()
+              { donnees.currTemp(); }); // When a client requests "/temp", call the currTemp function
+    server.on("/removeallfiles", []()
+              { fichiers.removeallfiles(); }); // When a client requests "/removeallfiles", call the removeallfiles function
+    server.on("/listallfiles", []()
+              { fichiers.listAllFiles(); }); // When a client requests "/listallfiles", call the listAllFiles function
+    server.on("/readcurrfile", []()
+              { fichiers.readCurrFile(); }); // When a client requests "/readcurrfile", call the readCurrFile function
+    server.on("/avg", []()
+              { fichiers.makeAveragefromfile(); }); // When a client requests "/avg", call the makeAveragefromfile function
+    server.begin();                                 // Start the server
 }

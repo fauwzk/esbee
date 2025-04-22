@@ -5,17 +5,17 @@ class Files
 {
 public:
     // Member functions
-    static void appendFile(String fichier, String ajout);
-    static void createFile(String date);
-    static void readCurrFile();
-    static void makeAveragefromfile();
-    static void removeallfiles();
-    static void listAllFiles();
-    static bool removeFile(String path);
-    static void removeAllFiles();
-    static int todayFile();
-    static int initFileSystem();
-    static void setPath(String p);
+    void appendFile(String fichier, String ajout);
+    void createFile(String date);
+    void readCurrFile();
+    void makeAveragefromfile();
+    void removeallfiles();
+    void listAllFiles();
+    bool removeFile(String path);
+    void removeAllFiles();
+    int todayFile();
+    int initFileSystem();
+    void setPath(String p);
 };
 
 #endif // FILES_H

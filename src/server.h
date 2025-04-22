@@ -4,9 +4,9 @@
 class Server
 {
 public:
-    void handleRoot();
-    void handleClient();
-    void startServer();
+    static void root();
+    static void client();
+    static void startServer();
 };
 
 #endif // FILES_H

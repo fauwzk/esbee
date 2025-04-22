@@ -2,7 +2,7 @@
 #include "files.h"
 #include "data.h"
 
-Data data;
+Data donnees;
 String path;
 
 void Files::setPath(String p)
@@ -78,7 +78,7 @@ void Files::makeAveragefromfile()
     Serial.println("Average: " + String(average));
     // server.send(200, "text/plain", "Average: " + String(average));
     removeFile(path);
-    createFile(data.getDate());
+    createFile(donnees.getDate());
 }
 
 void Files::removeallfiles()
@@ -127,7 +127,7 @@ void Files::removeAllFiles()
 
 int Files::todayFile()
 {
-    String fileName = "/" + Data::getDate() + ".txt";
+    String fileName = "/" + donnees.getDate() + ".txt";
     Serial.println("Today file: " + fileName);
     if (LittleFS.exists(fileName))
     {
