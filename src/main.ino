@@ -88,10 +88,12 @@ void loop(void)
     if (fichiers.appendFile(filename, String(donnees.getTemp())) != 0)
     {
       Serial.println("Error appending to file");
+      Serial.write(0x07)
     }
     else
     {
       Serial.println("Append completed");
+      Serial.write(0x07)
     }
 
     Serial.println("Minutes changed, file " + filename + " updated");
@@ -105,10 +107,12 @@ void loop(void)
       if (fichiers.makeAveragefromfile() != 0)
       {
         Serial.println("Erreur lors de la création de la moyenne");
+        Serial.write(0x07)
       }
       else
       {
         Serial.println("Moyenne créée avec succès");
+        Serial.write(0x07)
       }
     }
   }
