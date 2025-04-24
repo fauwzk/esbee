@@ -41,9 +41,9 @@ int Files::createFile(String date)
         else
         {
             file.close();
-            return 0;
         }
     }
+    return 0;
 }
 
 int Files::readCurrFile()
@@ -59,6 +59,7 @@ int Files::readCurrFile()
     String s = file.readString();
     file.close();
     serveur.esbeeSendClient(200, "text/html", s);
+    return 0;
 }
 
 int Files::makeAveragefromfile()
@@ -84,6 +85,7 @@ int Files::makeAveragefromfile()
     serveur.esbeeSendClient(200, "text/plain", "Average: " + String(average));
     removeFile(path);
     createFile(donnees.getDate());
+    return 0;
 }
 
 void Files::removeallfiles()
