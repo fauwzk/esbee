@@ -26,7 +26,7 @@ void setup(void)
   digitalWrite(PIN_GROVE_POWER, 1);
   pinMode(led_pin, OUTPUT);
 
-  donnees.initSensors();
+  donnees.initSensors(14);
   donnees.initTime();
   if (fichiers.initFileSystem() != 0)
   {

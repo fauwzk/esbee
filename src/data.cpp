@@ -10,20 +10,17 @@
 #include <ESP8266WebServer.h>
 #include "globals.h"
 
-#define ONE_WIRE_BUS 14
-
 time_t epochTime;
 struct tm *ptm;
 int oldDay, oldHour, oldMinutes, currDay;
 
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
-
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
-void Data::initSensors()
+void Data::initSensors(int tempPin)
 {
+    OneWire oneWire(tempPin);
+    DallasTemperature sensors(&oneWire);
     sensors.begin();
 }
 
