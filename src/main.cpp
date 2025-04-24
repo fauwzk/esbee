@@ -2,7 +2,6 @@
 #include <Arduino.h>
 #include "globals.h"
 
-#define led_pin 12
 /*
 
 SETUP
@@ -23,7 +22,6 @@ void setup(void)
 
   pinMode(PIN_GROVE_POWER, OUTPUT);
   digitalWrite(PIN_GROVE_POWER, 1);
-  pinMode(led_pin, OUTPUT);
 
   esbee_data.initSensors(14);
   esbee_data.initTime();
