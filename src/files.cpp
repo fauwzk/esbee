@@ -82,6 +82,7 @@ int Files::makeAveragefromfile()
     }
     file.close();
     float average = sum / count;
+    donnees.setAvg(average);
     serveur.esbeeSendClient(200, "text/plain", "Average: " + String(average));
     removeFile(path);
     createFile(donnees.getDate());

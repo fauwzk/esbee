@@ -14,6 +14,8 @@ public:
     void set_oldDay(int day);
     void set_oldHour(int hour);
     void set_oldMinutes(int minutes);
+    void setAvg(int avg);
+    float getAvg();
     int get_oldDay();
     int get_oldHour();
     int get_oldMinutes();

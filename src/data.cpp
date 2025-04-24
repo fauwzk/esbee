@@ -12,7 +12,7 @@
 
 time_t epochTime;
 struct tm *ptm;
-int oldDay, oldHour, oldMinutes, currDay;
+int oldDay, oldHour, oldMinutes, currDay, tempAvg;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
@@ -87,6 +87,16 @@ float Data::getTemp()
     Serial.print(tempC);
     Serial.print("°C\n");
     return tempC;
+}
+
+void Data::setAvg(int avg)
+{
+    tempAvg = avg;
+}
+
+float Data::getAvg()
+{
+    return tempAvg;
 }
 
 String Data::getDate()

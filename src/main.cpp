@@ -17,8 +17,6 @@ void setup(void)
 {
   Serial.begin(115200); // Start the Serial communication to send messages to the computer
   delay(100);
-  Serial.println();
-
   serveur.startServer();
   Serial.println("HTTP server started");
 
@@ -112,6 +110,7 @@ void loop(void)
       else
       {
         Serial.println("Moyenne créée avec succès");
+
         Serial.write(0x07);
       }
     }
