@@ -1,5 +1,5 @@
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#ifndef ESBEE_H
+#define ESBEE_H
 
 #include <Arduino.h>
 #include "server.h"

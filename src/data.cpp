@@ -8,7 +8,7 @@
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
-#include "globals.h"
+#include "esbee.h"
 
 time_t epochTime;
 struct tm *ptm;

@@ -1,6 +1,6 @@
 // #include "data.cpp"
 #include <Arduino.h>
-#include "globals.h"
+#include "esbee.h"
 
 /*
 
@@ -109,7 +109,6 @@ void loop(void)
       else
       {
         Serial.println("Moyenne créée avec succès");
-
         Serial.write(0x07);
       }
     }
