@@ -8,7 +8,7 @@ ESP8266WebServer server(80); // Create a webserver object that listens for HTTP 
 
 void root()
 {
-    serveur.esbeeSendClient(200, "text/plain", "Hello world!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
+    esbee_server.esbeeSendClient(200, "text/plain", "Hello world!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
 void Server::esbeeHandleclient()
@@ -21,7 +21,7 @@ void Server::esbeeSendClient(int code, String contentType, String content)
     server.send(code, contentType, content); // Send HTTP status code and content type to the client
 }
 
-void Server::startServer()
+void Server::connectWifi()
 {
     wifiMulti.addAP("iPhone 15 Pro de Axel", "polentes"); // add Wi-Fi networks you want to connect to
     // wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
@@ -48,16 +48,20 @@ void Server::startServer()
     {
         Serial.println("Error setting up MDNS responder!");
     }
+}
+
+void Server::startServer()
+{
     server.on("/", root); // When a client requests the root URL ("/"), call the handleRoot function
     server.on("/temp", []()
-              { donnees.currTemp(); }); // When a client requests "/temp", call the currTemp function
+              { esbee_data.currTemp(); }); // When a client requests "/temp", call the currTemp function
     server.on("/removeallfiles", []()
-              { fichiers.removeallfiles(); }); // When a client requests "/removeallfiles", call the removeallfiles function
+              { esbee_files.removeallfiles(); }); // When a client requests "/removeallfiles", call the removeallfiles function
     server.on("/listallfiles", []()
-              { fichiers.listAllFiles(); }); // When a client requests "/listallfiles", call the listAllFiles function
+              { esbee_files.listAllFiles(); }); // When a client requests "/listallfiles", call the listAllFiles function
     server.on("/readcurrfile", []()
-              { fichiers.readCurrFile(); }); // When a client requests "/readcurrfile", call the readCurrFile function
+              { esbee_files.readCurrFile(); }); // When a client requests "/readcurrfile", call the readCurrFile function
     server.on("/avg", []()
-              { fichiers.makeAveragefromfile(); }); // When a client requests "/avg", call the makeAveragefromfile function
-    server.begin();                                 // Start the server
+              { esbee_files.makeAveragefromfile(); }); // When a client requests "/avg", call the makeAveragefromfile function
+    server.begin();                                    // Start the server
 }

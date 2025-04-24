@@ -6,8 +6,8 @@
 #include "files.h"
 #include "data.h"
 
-extern Files fichiers;
-extern Data donnees;
-extern Server serveur;
+extern Files esbee_files;
+extern Data esbee_data;
+extern Server esbee_server;
 
 #endif

@@ -9,37 +9,38 @@ SETUP
 
 */
 
-Files fichiers;
-Data donnees;
-Server serveur;
+Files esbee_files;
+Data esbee_data;
+Server esbee_server;
 
 void setup(void)
 {
   Serial.begin(115200); // Start the Serial communication to send messages to the computer
   delay(100);
-  serveur.startServer();
+  esbee_server.connectWifi();
+  esbee_server.startServer();
   Serial.println("HTTP server started");
 
   pinMode(PIN_GROVE_POWER, OUTPUT);
   digitalWrite(PIN_GROVE_POWER, 1);
   pinMode(led_pin, OUTPUT);
 
-  donnees.initSensors(14);
-  donnees.initTime();
-  if (fichiers.initFileSystem() != 0)
+  esbee_data.initSensors(14);
+  esbee_data.initTime();
+  if (esbee_files.initFileSystem() != 0)
   {
     Serial.println("Erreur lors de l'initialisation de LittleFS");
     return;
   }
   delay(1000);
-  donnees.update_oldDay();
-  donnees.update_oldHour();
-  donnees.update_oldMinutes();
+  esbee_data.update_oldDay();
+  esbee_data.update_oldHour();
+  esbee_data.update_oldMinutes();
 
   // if (!LittleFS.exists("/" + data.getDate() + ".txt"))
-  if (!fichiers.todayFile())
+  if (!esbee_files.todayFile())
   {
-    if (fichiers.createFile(donnees.getDate()) != 0)
+    if (esbee_files.createFile(esbee_data.getDate()) != 0)
     {
       Serial.println("Error creating file");
     }
@@ -63,11 +64,11 @@ LOOP
 int elapsedMinutes = 0;
 void loop(void)
 {
-  serveur.esbeeHandleclient();
-  donnees.updateTime();
-  if (donnees.getDay() != donnees.get_oldDay())
+  esbee_server.esbeeHandleclient();
+  esbee_data.updateTime();
+  if (esbee_data.getDay() != esbee_data.get_oldDay())
   {
-    if (fichiers.createFile(donnees.getDate()) != 0)
+    if (esbee_files.createFile(esbee_data.getDate()) != 0)
     {
       Serial.println("Error creating file for new day");
     }
@@ -75,15 +76,15 @@ void loop(void)
     {
       Serial.println("File created successfully for new day");
     }
-    donnees.update_oldDay();
-    Serial.println("Day changed, file " + donnees.getDate() + ".txt created");
+    esbee_data.update_oldDay();
+    Serial.println("Day changed, file " + esbee_data.getDate() + ".txt created");
   }
-  if (donnees.getMinutes() != donnees.get_oldMinutes())
+  if (esbee_data.getMinutes() != esbee_data.get_oldMinutes())
   {
-    String filename = fichiers.todayFileName();
+    String filename = esbee_files.todayFileName();
     Serial.println("Appending to file: " + filename);
 
-    if (fichiers.appendFile(filename, String(donnees.getTemp())) != 0)
+    if (esbee_files.appendFile(filename, String(esbee_data.getTemp())) != 0)
     {
       Serial.println("Error appending to file");
       Serial.write(0x07);
@@ -95,14 +96,14 @@ void loop(void)
     }
 
     Serial.println("Minutes changed, file " + filename + " updated");
-    donnees.update_oldMinutes();
+    esbee_data.update_oldMinutes();
 
     elapsedMinutes++;
     if (elapsedMinutes == 24)
     {
       elapsedMinutes = 0;
       Serial.println("Création de la moyenne");
-      if (fichiers.makeAveragefromfile() != 0)
+      if (esbee_files.makeAveragefromfile() != 0)
       {
         Serial.println("Erreur lors de la création de la moyenne");
         Serial.write(0x07);

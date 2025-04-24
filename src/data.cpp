@@ -121,7 +121,7 @@ void Data::currTemp()
     JSONData["Temperature"] = String(getTemp());
     char data[300];
     serializeJson(JSONData, data);
-    serveur.esbeeSendClient(200, "application/json", data);
+    esbee_server.esbeeSendClient(200, "application/json", data);
 }
 
 void Data::updateTime()

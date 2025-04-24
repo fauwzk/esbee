@@ -58,7 +58,7 @@ int Files::readCurrFile()
     }
     String s = file.readString();
     file.close();
-    serveur.esbeeSendClient(200, "text/html", s);
+    esbee_server.esbeeSendClient(200, "text/html", s);
     return 0;
 }
 
@@ -82,17 +82,17 @@ int Files::makeAveragefromfile()
     }
     file.close();
     float average = sum / count;
-    donnees.setAvg(average);
-    serveur.esbeeSendClient(200, "text/plain", "Average: " + String(average));
+    esbee_data.setAvg(average);
+    esbee_server.esbeeSendClient(200, "text/plain", "Average: " + String(average));
     removeFile(path);
-    createFile(donnees.getDate());
+    createFile(esbee_data.getDate());
     return 0;
 }
 
 void Files::removeallfiles()
 {
     removeAllFiles();
-    serveur.esbeeSendClient(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
+    esbee_server.esbeeSendClient(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
 void Files::listAllFiles()
@@ -105,7 +105,7 @@ void Files::listAllFiles()
         Serial.println(dir.fileName());
         allFiles += dir.fileName() + "\n";
     }
-    serveur.esbeeSendClient(200, "text/plain", allFiles); // Send HTTP status 200 (Ok) and send some text to the browser/client
+    esbee_server.esbeeSendClient(200, "text/plain", allFiles); // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
 bool Files::removeFile(String path)
@@ -128,14 +128,14 @@ void Files::removeAllFiles()
     { // List the file system contents
         Serial.print("Deleting ");
         Serial.println(dir.fileName());
-        LittleFS.remove(dir.fileName());                                  // Remove each file
-        serveur.esbeeSendClient(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
+        LittleFS.remove(dir.fileName());                                       // Remove each file
+        esbee_server.esbeeSendClient(200, "text/plain", "All files removed!"); // Send HTTP status 200 (Ok) and send some text to the browser/client
     }
 }
 
 String Files::todayFileName()
 {
-    String fileName = "/" + donnees.getDate() + ".txt";
+    String fileName = "/" + esbee_data.getDate() + ".txt";
     return fileName;
 }
 
