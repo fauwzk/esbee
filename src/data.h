@@ -10,7 +10,7 @@ public:
     float getTemp();
     String getDate();
     void currTemp();
-    void initSensors();
+    void initSensors(int tempPin);
     void set_oldDay(int day);
     void set_oldHour(int hour);
     void set_oldMinutes(int minutes);

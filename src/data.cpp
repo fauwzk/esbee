@@ -17,10 +17,12 @@ int oldDay, oldHour, oldMinutes, currDay;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
+OneWire oneWire(0); // Pin for OneWire
+DallasTemperature sensors(&oneWire);
+
 void Data::initSensors(int tempPin)
 {
-    OneWire oneWire(tempPin);
-    DallasTemperature sensors(&oneWire);
+    oneWire.begin(tempPin); // Initialize OneWire on the specified pin
     sensors.begin();
 }
 
