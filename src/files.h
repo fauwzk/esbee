@@ -4,20 +4,24 @@
 class Files
 {
 public:
-    // Member functions
-    int appendFile(String fichier, String ajout);
-    int createFile(String date);
-    int readCurrFile();
-    int makeAveragefromfile();
-    int todayFile();
-    int initFileSystem();
+	// Member functions
+	int appendFile(String fichier, String ajout);
+	int createFile(String date);
+	int readCurrFile();
+	int makeAveragefromfile();
+	int todayFile();
+	int initFileSystem();
 
-    void removeallfiles();
-    void listAllFiles();
-    bool removeFile(String path);
-    void removeAllFiles();
-    void setPath(String p);
-    String todayFileName();
+	void newDay();
+	void removeallfiles();
+	void listAllFiles();
+	bool removeFile(String path);
+	void setPath(String p);
+	String todayFileName();
+	String oldFile();
+
+private:
+	void removeAllFiles();
 };
 
 #endif // FILES_H

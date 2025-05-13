@@ -4,10 +4,10 @@
 class Server
 {
 public:
-    void esbeeHandleclient();
-    void startServer();
-    void connectWifi();
-    void esbeeSendClient(int code, String contentType, String content);
+	void esbeeHandleclient();
+	void startServer();
+	void connectWifi();
+	void esbeeSendClient(int code, String contentType, String content);
 };
 
 #endif // FILES_H
