@@ -12,7 +12,7 @@ public:
 	void currTemp();
 	void initSensors(int tempPin, int DOUT_SCALE, int CLK_SCALE);
 	void weightTare();
-	void weightRead();
+	String weightRead();
 	void set_oldDay(int day);
 	void set_oldHour(int hour);
 	void set_oldMinutes(int minutes);

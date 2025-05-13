@@ -34,16 +34,18 @@ void Data::initSensors(int tempPin, int DOUT_SCALE, int CLK_SCALE)
 }
 
 void Data::weightTare()
-{ 
+{
 	scale.tare();
 }
 
-void Data::weightRead()
+String Data::weightRead()
 {
 	Serial.print("Reading: ");
-	Serial.print((scale.get_units() * 0.453592 * 1000), 1); // scale.get_units() returns a float
-	Serial.print(" g");										// You can change this to kg but you'll need to refactor the calibration_factor
-	Serial.println();
+	float weight = (scale.get_units() * 0.453592 * 1000);
+	Serial.print(weight, 1); // scale.get_units() returns a float
+	Serial.print(" g");		 // You can change this to kg but you'll need to refactor the calibration_factor
+	esbee_server.esbeeSendClient(200, "text/html", String(weight));
+	return String(weight);
 }
 
 int Data::getDay()
