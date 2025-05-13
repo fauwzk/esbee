@@ -63,5 +63,7 @@ void Server::startServer()
 			  { esbee_files.readCurrFile(); }); // When a client requests "/readcurrfile", call the readCurrFile function
 	server.on("/avg", []()
 			  { esbee_files.makeAveragefromfile(); }); // When a client requests "/avg", call the makeAveragefromfile function
-	server.begin();									   // Start the server
+	server.on("/weight", []()
+			  { esbee_data.weightRead(); }); // When a client requests "/weight", call the weightRead function
+	server.begin();							 // Start the server
 }
