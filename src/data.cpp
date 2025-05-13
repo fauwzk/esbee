@@ -38,14 +38,16 @@ void Data::weightTare()
 	scale.tare();
 }
 
-String Data::weightRead()
+int Data::getWeight()
 {
-	Serial.print("Reading: ");
-	float weight = (scale.get_units() * 0.453592 * 1000);
-	Serial.print(weight, 1); // scale.get_units() returns a float
-	Serial.print(" g");		 // You can change this to kg but you'll need to refactor the calibration_factor
-	esbee_server.esbeeSendClient(200, "text/html", String(weight));
-	return String(weight);
+	return (scale.get_units() * 0.453592 * 1000);
+}
+
+void Data::weightRead()
+{
+	String weight = String(getWeight(), 1);
+	Serial.println(weight + "g"); // scale.get_units() returns a float
+	esbee_server.esbeeSendClient(200, "text/html", weight);
 }
 
 int Data::getDay()
@@ -130,18 +132,16 @@ String Data::getDate()
 	return String(String(monthDay) + "-" + String(currentMonth) + "-" + String(currentYear));
 }
 
-void Data::currTemp()
+void Data::currState()
 {
 
 	String formattedTime = timeClient.getFormattedTime();
-	Serial.print("Formatted Time: ");
-	Serial.println(formattedTime);
-
 	JsonDocument JSONData;
 	JSONData["Date"] = getDate();
 	JSONData["Heure"] = formattedTime;
 	JSONData["Temperature"] = String(getTemp());
-	char data[300];
+	JSONData["Weight"] = String(getWeight());
+	char data[500];
 	serializeJson(JSONData, data);
 	esbee_server.esbeeSendClient(200, "application/json", data);
 }

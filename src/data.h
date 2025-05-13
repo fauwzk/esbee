@@ -9,10 +9,11 @@ public:
 	int getMinutes();
 	float getTemp();
 	String getDate();
-	void currTemp();
+	void currState();
 	void initSensors(int tempPin, int DOUT_SCALE, int CLK_SCALE);
 	void weightTare();
-	String weightRead();
+	void weightRead();
+	int getWeight();
 	void set_oldDay(int day);
 	void set_oldHour(int hour);
 	void set_oldMinutes(int minutes);

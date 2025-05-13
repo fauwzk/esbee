@@ -53,8 +53,8 @@ void Server::connectWifi()
 void Server::startServer()
 {
 	server.on("/", root); // When a client requests the root URL ("/"), call the handleRoot function
-	server.on("/temp", []()
-			  { esbee_data.currTemp(); }); // When a client requests "/temp", call the currTemp function
+	server.on("/now", []()
+			  { esbee_data.currState(); }); // When a client requests "/temp", call the currState function
 	server.on("/removeallfiles", []()
 			  { esbee_files.removeallfiles(); }); // When a client requests "/removeallfiles", call the removeallfiles function
 	server.on("/listallfiles", []()
