@@ -132,18 +132,21 @@ String Data::getDate()
 	return String(String(monthDay) + "-" + String(currentMonth) + "-" + String(currentYear));
 }
 
+String Data::createJson()
+{
+	DynamicJsonDocument JSONData(512);
+	JSONData["Date"] = getDate();
+	JSONData["Heure"] = timeClient.getFormattedTime();
+	JSONData["Temperature"] = String(getTemp());
+	JSONData["Poids"] = String(getWeight());
+	String data;
+	serializeJson(JSONData, data);
+	return data;
+}
+
 void Data::currState()
 {
-
-	String formattedTime = timeClient.getFormattedTime();
-	JsonDocument JSONData;
-	JSONData["Date"] = getDate();
-	JSONData["Heure"] = formattedTime;
-	JSONData["Temperature"] = String(getTemp());
-	JSONData["Weight"] = String(getWeight());
-	char data[500];
-	serializeJson(JSONData, data);
-	esbee_server.esbeeSendClient(200, "application/json", data);
+	esbee_server.esbeeSendClient(200, "application/json", createJson());
 }
 
 void Data::updateTime()

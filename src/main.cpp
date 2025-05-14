@@ -71,6 +71,11 @@ void loop(void)
 {
 	esbee_server.esbeeHandleclient();
 	esbee_data.updateTime();
+	if (esbee_data.getMinutes() != esbee_data.get_oldMinutes())
+	{
+		esbee_server.sendDweet(esbee_data.createJson());
+		esbee_data.update_oldMinutes();
+	}
 	/*
 	if (esbee_data.getDay() != esbee_data.get_oldDay())
 	{
@@ -128,6 +133,5 @@ void loop(void)
 Send message : https://dweet.cc/dweet/for/my-thing-name?temperature=21&unit=c
 curl https://dweet.cc/get/latest/dweet/for/my-thing-name
 */
-	esbee_server.sendDweet(String(esbee_data.getTemp()));
-	delay(60000);
+	delay(1);
 }

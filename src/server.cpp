@@ -4,13 +4,15 @@
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h> // Include the WebServer library
 #include <ESP8266HTTPClient.h>
-#include <ESP8266WiFi.h>
+#include <ESP8266Wifi.h>
+#include <WiFiClientSecure.h>
 
 ESP8266WiFiMulti wifiMulti;	 // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 ESP8266WebServer server(80); // Create a webserver object that listens for HTTP request on port 8
 
 const char *thingName = "esbee_cressot"; // Change to something unique
 const char *host = "dweet.cc";
+const int httpsPort = 443;
 
 void root()
 {
@@ -19,43 +21,33 @@ void root()
 
 void Server::sendDweet(String data)
 {
-	WiFiClient client;
-	const char *host = "dweet.cc";
-	const int httpPort = 80;
-
-	Serial.print("Connecting to ");
-	Serial.println(host);
-
-	if (!client.connect(host, httpPort))
+	Serial.println("JSON: " + data);
+	/*
+	WiFiClientSecure client;
+	client.setInsecure();
+	if (!client.connect(host, httpsPort))
 	{
-		Serial.println("Connection failed.");
-		delay(10000);
+		Serial.println("Connection failed");
 		return;
 	}
-	else
-	{
-		Serial.println("On a gagné !");
-	}
-	// Construct the URL with test data
-	String url = "/dweet/for/";
-	url += thingName;
-	url += "?temperature=" + data;
+
+
+	String url = "/dweet/for/" + String(thingName) + "?temperature=" + data;
 
 	Serial.print("Requesting URL: ");
 	Serial.println(url);
 
-	// Send HTTP GET
 	client.print(String("GET ") + url + " HTTP/1.1\r\n" +
 				 "Host: " + host + "\r\n" +
+				 "User-Agent: ESP8266\r\n" +
 				 "Connection: close\r\n\r\n");
 
-	// Wait for response
 	while (client.connected())
 	{
 		String line = client.readStringUntil('\n');
-		Serial.println(line);
 		if (line == "\r")
 			break;
+		Serial.println(line);
 	}
 
 	while (client.available())
@@ -64,8 +56,8 @@ void Server::sendDweet(String data)
 		Serial.println(line);
 	}
 
-	client.stop();
-	Serial.println("Connection closed.");
+	Serial.println("Connection closed");
+	*/
 }
 
 void Server::esbeeHandleclient()

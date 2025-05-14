@@ -10,6 +10,7 @@ public:
 	float getTemp();
 	String getDate();
 	void currState();
+	String createJson();
 	void initSensors(int tempPin, int DOUT_SCALE, int CLK_SCALE);
 	void weightTare();
 	void weightRead();
