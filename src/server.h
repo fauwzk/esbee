@@ -8,6 +8,7 @@ public:
 	void startServer();
 	void connectWifi();
 	void esbeeSendClient(int code, String contentType, String content);
+	void sendDweet(String data);
 };
 
 #endif // FILES_H

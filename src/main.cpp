@@ -71,6 +71,7 @@ void loop(void)
 {
 	esbee_server.esbeeHandleclient();
 	esbee_data.updateTime();
+	/*
 	if (esbee_data.getDay() != esbee_data.get_oldDay())
 	{
 		if (esbee_files.createFile(esbee_data.getDate()) != 0)
@@ -121,5 +122,12 @@ void loop(void)
 			filename = esbee_files.todayFileName();
 		}
 	}
-	delay(1);
+	*/
+
+	/*
+Send message : https://dweet.cc/dweet/for/my-thing-name?temperature=21&unit=c
+curl https://dweet.cc/get/latest/dweet/for/my-thing-name
+*/
+	esbee_server.sendDweet(String(esbee_data.getTemp()));
+	delay(60000);
 }
