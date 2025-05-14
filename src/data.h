@@ -7,10 +7,14 @@ public:
 	int getDay();
 	int getHour();
 	int getMinutes();
-	float getTemp();
+	float getIntTemp();
+	String getExterTemp();
+	String getExterHum();
 	String getDate();
 	void currState();
-	String createJson();
+	String createCurrJson();
+	int getLight();
+	int getWater();
 	void initSensors(int tempPin, int DOUT_SCALE, int CLK_SCALE);
 	void weightTare();
 	void weightRead();

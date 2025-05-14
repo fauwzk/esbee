@@ -15,6 +15,8 @@ Server esbee_server;
 #define PIN_TEMPERATURE 14
 #define PIN_DOUT_HX711 5
 #define PIN_CLK_HX711 4
+#define PIN_WATER_SENSOR 3
+
 String filename = "";
 
 void setup(void)
@@ -26,21 +28,25 @@ void setup(void)
 	Serial.println("HTTP server started");
 
 	pinMode(PIN_GROVE_POWER, OUTPUT);
+	pinMode(PIN_WATER_SENSOR, INPUT);
 	digitalWrite(PIN_GROVE_POWER, 1);
 
 	esbee_data.initSensors(PIN_TEMPERATURE, PIN_DOUT_HX711, PIN_CLK_HX711);
 	esbee_data.initTime();
+	/*
 	if (esbee_files.initFileSystem() != 0)
 	{
 		Serial.println("Erreur lors de l'initialisation de LittleFS");
 		return;
 	}
+		*/
 	delay(1000);
 	esbee_data.update_oldDay();
 	esbee_data.update_oldHour();
 	esbee_data.update_oldMinutes();
 
 	// if (!LittleFS.exists("/" + data.getDate() + ".txt"))
+	/*
 	if (!esbee_files.todayFile())
 	{
 		if (esbee_files.createFile(esbee_data.getDate()) != 0)
@@ -57,6 +63,7 @@ void setup(void)
 		Serial.println("Today file already exists");
 	}
 	filename = esbee_files.todayFileName();
+	*/
 }
 
 /*
@@ -73,7 +80,7 @@ void loop(void)
 	esbee_data.updateTime();
 	if (esbee_data.getMinutes() != esbee_data.get_oldMinutes())
 	{
-		esbee_server.sendDweet(esbee_data.createJson());
+		esbee_server.sendDweet(esbee_data.createCurrJson());
 		esbee_data.update_oldMinutes();
 	}
 	/*
@@ -95,7 +102,7 @@ void loop(void)
 
 		Serial.println("Appending to file: " + filename);
 
-		if (esbee_files.appendFile(filename, String(esbee_data.getTemp())) != 0)
+		if (esbee_files.appendFile(filename, String(esbee_data.getIntTemp())) != 0)
 		{
 			Serial.println("Error appending to file");
 			Serial.write(0x07);

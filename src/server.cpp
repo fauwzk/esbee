@@ -21,8 +21,7 @@ void root()
 
 void Server::sendDweet(String data)
 {
-	Serial.println("JSON: " + data);
-	/*
+
 	WiFiClientSecure client;
 	client.setInsecure();
 	if (!client.connect(host, httpsPort))
@@ -31,9 +30,31 @@ void Server::sendDweet(String data)
 		return;
 	}
 
+	DynamicJsonDocument jsonData(256);
+	DeserializationError error = deserializeJson(jsonData, data);
+	if (error)
+	{
+		Serial.print("deserializeJson() failed: ");
+		Serial.println(error.f_str());
+		return;
+	}
 
-	String url = "/dweet/for/" + String(thingName) + "?temperature=" + data;
+	String url = "/dweet/for/" + String(thingName) + "?";
 
+	for (JsonPair kv : jsonData.as<JsonObject>())
+	{
+		const char *key = kv.key().c_str();
+		String value = kv.value().as<String>();
+
+		Serial.print("Key: ");
+		Serial.print(key);
+		Serial.print(" -> Value: ");
+		Serial.println(value);
+		url += String(key) + "=" + value + "&";
+		Serial.println(url);
+	}
+
+	url.remove(url.length() - 1); // Remove the last '&'
 	Serial.print("Requesting URL: ");
 	Serial.println(url);
 
@@ -57,7 +78,6 @@ void Server::sendDweet(String data)
 	}
 
 	Serial.println("Connection closed");
-	*/
 }
 
 void Server::esbeeHandleclient()
