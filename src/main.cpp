@@ -28,7 +28,7 @@ void setup(void)
 	Serial.println("HTTP server started");
 
 	pinMode(PIN_GROVE_POWER, OUTPUT);
-	pinMode(PIN_WATER_SENSOR, INPUT);
+	pinMode(PIN_WATER_SENSOR, INPUT_PULLUP);
 	digitalWrite(PIN_GROVE_POWER, 1);
 
 	esbee_data.initSensors(PIN_TEMPERATURE, PIN_DOUT_HX711, PIN_CLK_HX711);

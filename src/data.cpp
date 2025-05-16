@@ -1,7 +1,8 @@
 // Include the WebServer library
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include <NTPClient.h>
+// #include <NTPClient.h>
+#include <time.h>
 #include <WiFiClient.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
@@ -11,12 +12,8 @@
 #include "HX711.h"
 #include "DHT.h"
 
-time_t epochTime;
-struct tm *ptm;
+struct tm ptm;
 int oldDay, oldHour, oldMinutes, currDay, tempAvg;
-
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 OneWire oneWire(0); // Pin for OneWire
 DallasTemperature sensors(&oneWire);
@@ -57,17 +54,17 @@ void Data::weightRead()
 
 int Data::getDay()
 {
-	return ptm->tm_mday;
+	return ptm.tm_mday;
 }
 
 int Data::getHour()
 {
-	return ptm->tm_hour;
+	return ptm.tm_hour;
 }
 
 int Data::getMinutes()
 {
-	return ptm->tm_min;
+	return ptm.tm_min;
 }
 
 void Data::set_oldDay(int day)
@@ -152,17 +149,18 @@ float Data::getAvg()
 String Data::getDate()
 {
 	int monthDay = getDay();
-	int currentMonth = ptm->tm_mon + 1;
-	int currentYear = ptm->tm_year + 1900;
-
+	int currentMonth = ptm.tm_mon + 1;
+	int currentYear = ptm.tm_year + 1900;
 	return String(String(monthDay) + "-" + String(currentMonth) + "-" + String(currentYear));
 }
 
 String Data::createCurrJson()
 {
 	DynamicJsonDocument JSONData(512);
+	char buffer[80];
+	strftime(buffer, sizeof(buffer), "%H:%M:%S", &ptm);
 	JSONData["Date"] = getDate();
-	JSONData["Heure"] = timeClient.getFormattedTime();
+	JSONData["Heure"] = buffer;
 	JSONData["TemperatureInter"] = String(getIntTemp());
 	JSONData["TemperatureExter"] = String(getExterTemp());
 	JSONData["HumiditeExter"] = String(getExterHum());
@@ -181,16 +179,17 @@ void Data::currState()
 
 void Data::updateTime()
 {
-	timeClient.update();
-	epochTime = timeClient.getEpochTime();
-	ptm = localtime(&epochTime);
+	getLocalTime(&ptm);
+	char buffer[3];						 // Enough for "09" + null terminator
+	sprintf(buffer, "%02d", ptm.tm_min); // Format: two digits, zero-padded
+	Serial.println(buffer);				 // Output: 07
+	ptm.tm_min = atoi(buffer);			 // Convert to int
+	Serial.println("Time updated" + String(ptm.tm_hour) + ":" + String(ptm.tm_min) + ":" + String(ptm.tm_sec));
 }
 
 void Data::initTime()
 {
-	timeClient.begin();
-	timeClient.setTimeOffset(3600); // Set timezone offset in seconds (e.g., 3600 for UTC+1)
-	timeClient.update();
-	epochTime = timeClient.getEpochTime();
-	ptm = localtime(&epochTime);
+	const int decalage = 2;							   // la valeur dépend de votre fuseau horaire. Essayez 2 pour la France.
+	configTime(decalage * 3600, 0, "fr.pool.ntp.org"); // serveurs canadiens								   //  en Europe, essayez europe.pool.ntp.org ou fr.pool.ntp.orgt timezone offset in seconds (e.g., 3600 for UTC+1)
+	getLocalTime(&ptm);
 }
