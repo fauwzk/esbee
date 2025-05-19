@@ -12,9 +12,9 @@ Files esbee_files;
 Data esbee_data;
 Server esbee_server;
 
-#define PIN_TEMPERATURE 14
-#define PIN_DOUT_HX711 5
-#define PIN_CLK_HX711 4
+#define PIN_TEMPERATURE 5
+#define PIN_DOUT_HX711 13
+#define PIN_CLK_HX711 12
 #define PIN_WATER_SENSOR 3
 
 String filename = "";

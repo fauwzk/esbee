@@ -45,13 +45,14 @@ void Server::sendDweet(String data)
 	{
 		const char *key = kv.key().c_str();
 		String value = kv.value().as<String>();
-
+		/*
 		Serial.print("Key: ");
 		Serial.print(key);
 		Serial.print(" -> Value: ");
 		Serial.println(value);
+		*/
 		url += String(key) + "=" + value + "&";
-		Serial.println(url);
+		// Serial.println(url);
 	}
 
 	url.remove(url.length() - 1); // Remove the last '&'
@@ -68,13 +69,13 @@ void Server::sendDweet(String data)
 		String line = client.readStringUntil('\n');
 		if (line == "\r")
 			break;
-		Serial.println(line);
+		// Serial.println(line);
 	}
 
 	while (client.available())
 	{
 		String line = client.readStringUntil('\n');
-		Serial.println(line);
+		// Serial.println(line);
 	}
 
 	Serial.println("Connection closed");
@@ -93,7 +94,7 @@ void Server::esbeeSendClient(int code, String contentType, String content)
 void Server::connectWifi()
 {
 	wifiMulti.addAP("iPhone 15 Pro de Axel", "polentes"); // add Wi-Fi networks you want to connect to
-	// wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
+	wifiMulti.addAP("ASUS", "tw63rwum");
 	// wifiMulti.addAP("ssid_from_AP_3", "your_password_for_AP_3");
 
 	Serial.println("Connecting ...");

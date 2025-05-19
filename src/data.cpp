@@ -21,7 +21,7 @@ HX711 scale;
 #define calibration_factor -13947 // This value is obtained using the SparkFun_HX711_Calibration sketch
 #define PIN_WATER_SENSOR 3
 #define DHTTYPE DHT11
-#define DHTPIN 13
+#define DHTPIN 14
 DHT dht(DHTPIN, DHTTYPE);
 
 void Data::initSensors(int tempPin, int DOUT_SCALE, int CLK_SCALE)
@@ -33,6 +33,7 @@ void Data::initSensors(int tempPin, int DOUT_SCALE, int CLK_SCALE)
 	sensors.begin();
 	scale.set_scale(calibration_factor); // This value is obtained by using the SparkFun_HX711_Calibration sketch
 	Data::weightTare();
+	Data::getWeight();
 }
 
 void Data::weightTare()
@@ -42,13 +43,14 @@ void Data::weightTare()
 
 int Data::getWeight()
 {
-	return (scale.get_units() * 0.453592 * 1000);
+	int test = scale.get_units() * 0.453592 * 1000;
+	Serial.println(String(test));
+	return test;
 }
 
 void Data::weightRead()
 {
 	String weight = String(getWeight(), 1);
-	Serial.println(weight + "g"); // scale.get_units() returns a float
 	esbee_server.esbeeSendClient(200, "text/html", weight);
 }
 
@@ -182,9 +184,7 @@ void Data::updateTime()
 	getLocalTime(&ptm);
 	char buffer[3];						 // Enough for "09" + null terminator
 	sprintf(buffer, "%02d", ptm.tm_min); // Format: two digits, zero-padded
-	Serial.println(buffer);				 // Output: 07
 	ptm.tm_min = atoi(buffer);			 // Convert to int
-	Serial.println("Time updated" + String(ptm.tm_hour) + ":" + String(ptm.tm_min) + ":" + String(ptm.tm_sec));
 }
 
 void Data::initTime()
